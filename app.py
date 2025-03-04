@@ -10,7 +10,7 @@ import shutil
 class ENTFileExtractor:
     def __init__(self, root):
         self.root = root
-        self.root.title("ENT 파일 선택 및 압축 해제")
+        self.root.title("엔트리 머지 - 엔트리 합작을 위한 도구")
         
         self.file_list = []
         self.extract_buttons = []  # 각 파일의 압축 해제 버튼들을 저장
@@ -24,12 +24,12 @@ class ENTFileExtractor:
         self.save_path_button = tk.Button(root, text="저장 경로 지정", command=self.choose_save_path)
         self.save_path_button.pack(pady=5)
 
-        # 작품 추가 버튼
-        self.add_button = tk.Button(root, text="작품 추가하기", command=self.add_files)
+        # 작품 불러오기기 버튼
+        self.add_button = tk.Button(root, text="작품 불러오기기", command=self.add_files)
         self.add_button.pack(pady=5)
         
-        # "압축 하기" 버튼 (초기 상태: 비활성화)
-        self.compress_button = tk.Button(root, text="압축 하기", command=self.compress_files, state=tk.DISABLED)
+        # "작품 합치기" 버튼 (초기 상태: 비활성화)
+        self.compress_button = tk.Button(root, text="작품 합치기", command=self.compress_files, state=tk.DISABLED)
         self.compress_button.pack(pady=5)
         
         self.frame = tk.Frame(root)
@@ -70,7 +70,7 @@ class ENTFileExtractor:
         
         # 저장 경로가 지정되어 있어야 압축 해제 버튼 활성화
         button_state = tk.NORMAL if self.save_path else tk.DISABLED
-        button = tk.Button(file_frame, text="압축 해제", command=lambda: self.extract_file(file_path, button), state=button_state)
+        button = tk.Button(file_frame, text="작품 등록", command=lambda: self.extract_file(file_path, button), state=button_state)
         button.pack(side=tk.RIGHT, padx=5)
         self.extract_buttons.append(button)
     
@@ -152,7 +152,7 @@ class ENTFileExtractor:
             messagebox.showerror("오류", "저장 경로가 지정되지 않았습니다.")
             return
         
-        button.config(state=tk.DISABLED, text="해제 중...")
+        button.config(state=tk.DISABLED, text="등록 중...")
         self.root.update_idletasks()  # UI 업데이트 강제 실행
         
         merge_folder = os.path.join(self.save_path, "ENTmerge")
@@ -176,24 +176,24 @@ class ENTFileExtractor:
                     merged_file_path = os.path.join(temp_folder, "project.json")
                     with open(merged_file_path, "w", encoding="utf-8") as f_out:
                         json.dump(self.merged_project_json, f_out, ensure_ascii=False, indent=4)
-                button.config(text="해제 완료")
+                button.config(text="등록 완료")
                 # 하나라도 압축 해제했다면 경로 수정 버튼 비활성화
                 self.save_path_button.config(state=tk.DISABLED)
                 # 해제 완료 후 "압축 하기" 버튼 활성화 조건 확인
                 self.check_compress_button_condition()
             else:
                 messagebox.showerror("오류", "지원되지 않는 압축 형식이거나 압축 파일이 아닙니다.")
-                button.config(state=tk.NORMAL, text="압축 해제")
+                button.config(state=tk.NORMAL, text="작품 등록")
         except Exception as e:
-            messagebox.showerror("오류", f"압축 해제 중 오류 발생: {e}")
-            button.config(state=tk.NORMAL, text="압축 해제")
+            messagebox.showerror("오류", f"작품 등록 중 오류 발생: {e}")
+            button.config(state=tk.NORMAL, text="작품 등록")
 
     def check_compress_button_condition(self):
         """
-        추가된 파일이 2개 이상이며 모든 압축 해제 버튼의 텍스트가 "해제 완료"일 경우
+        추가된 파일이 2개 이상이며 모든 압축 해제 버튼의 텍스트가 "등록 완료"일 경우
         "압축 하기" 버튼을 활성화합니다.
         """
-        if len(self.file_list) >= 2 and all(button.cget("text") == "해제 완료" for button in self.extract_buttons):
+        if len(self.file_list) >= 2 and all(button.cget("text") == "등록 완료" for button in self.extract_buttons):
             self.compress_button.config(state=tk.NORMAL)
         else:
             self.compress_button.config(state=tk.DISABLED)
@@ -233,10 +233,10 @@ class ENTFileExtractor:
             messagebox.showerror("오류", "압축할 대상 폴더가 존재하지 않습니다.")
             return
 
-        # 모든 버튼 비활성화 및 "압축 하는 중.." 표시
+        # 모든 버튼 비활성화 및 "합치는 중.." 표시
         for widget in [self.save_path_button, self.add_button, self.compress_button] + self.extract_buttons:
             widget.config(state=tk.DISABLED)
-        self.compress_button.config(text="압축 하는 중..")
+        self.compress_button.config(text="합치는 중..")
 
         # tar.add()에서 사용할 필터 함수 정의 (심볼릭 링크 제거 및 포터블 옵션 적용)
         def tar_filter(tarinfo):
@@ -255,19 +255,19 @@ class ENTFileExtractor:
             # temp 폴더를 기준으로 압축하며, arcname을 "temp"로 지정하여 동일한 디렉토리 구조를 생성합니다.
             with tarfile.open(save_file, "w:gz", compresslevel=6) as tar:
                 tar.add(temp_folder, arcname="temp", filter=tar_filter)
-            messagebox.showinfo("성공", f"파일이 성공적으로 압축되었습니다: {save_file}")
+            messagebox.showinfo("성공", f"파일이 성공적으로 만들어졌습니다.: {save_file}")
         except Exception as e:
-            messagebox.showerror("오류", f"압축하는 동안 오류 발생: {e}")
+            messagebox.showerror("오류", f"등록하는 동안 오류 발생: {e}")
         finally:
             """
-            # 압축 끝난 후 생성한 임시 파일 모두 삭제
+            # 등록 끝난 후 생성한 임시 파일 모두 삭제
             if os.path.exists(merge_folder):
                 try:
                     shutil.rmtree(merge_folder)
                 except Exception as e:
                     messagebox.showerror("오류", f"임시 파일 삭제 중 오류 발생: {e}")
             """
-        self.compress_button.config(text="압축 완료")
+        self.compress_button.config(text="합치기 성공")
 
 if __name__ == "__main__":
     root = tk.Tk()
