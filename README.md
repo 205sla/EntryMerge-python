@@ -1,4 +1,4 @@
-# ENT File Extractor
+# EntryMerge-python
 
 ## 소개
 **ENT File Extractor**는 엔트리 작품 파일인 `.ent` 파일을 선택하여 압축 해제하고, 여러 개의 파일을 병합한 후 새로운 `.ent` 파일로 다시 압축할 수 있는 GUI 애플리케이션입니다. Python의 `Tkinter`를 사용하여 개발되었습니다.
