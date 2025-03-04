@@ -12,7 +12,15 @@
 - 직관적인 GUI 및 예외 처리
 
 ## 실행 방법
-### 1. 필수 라이브러리 설치
+### 1. EXE 파일 실행 (권장)
+별도의 Python 환경 설정 없이 실행할 수 있는 **Windows 실행 파일**을 제공합니다.
+1. [`dist/EntryMerge.exe` 다운로드](https://github.com/205sla/EntryMerge-python/tree/main/dist)
+2. `EntryMerge.exe` 파일을 실행합니다.
+3. GUI에서 `.ent` 파일을 추가하고 병합을 진행합니다.
+4. 자세한 실행 방법은 [유튜브 영상](https://youtu.be/DBWdrvaxsok)을 참고하세요.
+
+### 2. Python 코드 실행
+#### 필수 라이브러리 설치
 ```bash
 pip install -r requirements.txt
 ```
@@ -21,7 +29,7 @@ pip install -r requirements.txt
 pip install tk
 ```
 
-### 2. 실행
+#### 실행
 ```bash
 python app.py
 ```
