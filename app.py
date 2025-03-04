@@ -104,7 +104,7 @@ class ENTFileExtractor:
         """
         병합된 JSON 데이터에서
         1. "scenes" 항목의 각 id를 4자리 랜덤 문자열로 변경 (중복되지 않도록)
-        2. "objects" 항목 내의 "scene" 값도 변경된 id로 업데이트
+        2. "objects" 항목 내의 "scene" 값과 "script" 문자열 내의 해당 scene id도 변경
         """
         if "scenes" in self.merged_project_json and isinstance(self.merged_project_json["scenes"], list):
             scene_mapping = {}  # 기존 id -> 새 id 매핑
@@ -123,21 +123,30 @@ class ENTFileExtractor:
             
             if "objects" in self.merged_project_json:
                 objects = self.merged_project_json["objects"]
+                
+                def process_obj(obj):
+                    # 기존 "scene" 키 처리
+                    if "scene" in obj and obj["scene"] in scene_mapping:
+                        obj["scene"] = scene_mapping[obj["scene"]]
+                    # "script" 문자열 내에서 scene id 치환 처리
+                    if "script" in obj and isinstance(obj["script"], str):
+                        for old_id, new_id in scene_mapping.items():
+                            obj["script"] = obj["script"].replace(old_id, new_id)
+                
                 if isinstance(objects, list):
                     for obj in objects:
                         try:
-                            if "scene" in obj and obj["scene"] in scene_mapping:
-                                obj["scene"] = scene_mapping[obj["scene"]]
+                            process_obj(obj)
                         except Exception as e:
                             messagebox.showerror("오류", f"objects 처리 중 오류 발생: {e}")
                 elif isinstance(objects, dict):
                     for key, obj in objects.items():
                         try:
-                            if isinstance(obj, dict) and "scene" in obj and obj["scene"] in scene_mapping:
-                                obj["scene"] = scene_mapping[obj["scene"]]
+                            if isinstance(obj, dict):
+                                process_obj(obj)
                         except Exception as e:
                             messagebox.showerror("오류", f"objects 처리 중 오류 발생: {e}")
-
+    
     def extract_file(self, file_path, button):
         if not self.save_path:
             messagebox.showerror("오류", "저장 경로가 지정되지 않았습니다.")
