@@ -259,13 +259,14 @@ class ENTFileExtractor:
         except Exception as e:
             messagebox.showerror("오류", f"압축하는 동안 오류 발생: {e}")
         finally:
+            """
             # 압축 끝난 후 생성한 임시 파일 모두 삭제
             if os.path.exists(merge_folder):
                 try:
                     shutil.rmtree(merge_folder)
                 except Exception as e:
                     messagebox.showerror("오류", f"임시 파일 삭제 중 오류 발생: {e}")
-
+            """
         self.compress_button.config(text="압축 완료")
 
 if __name__ == "__main__":
