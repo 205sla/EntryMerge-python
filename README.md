@@ -1,5 +1,9 @@
 # EntryMerge-python
 
+>합작할 때 작품을 하나씩 합치는 게 번거롭지 않으신가요?
+
+>클릭 한 번으로 여러 개의 ENT 파일을 손쉽게 하나로 합쳐보세요!
+
 ## 소개
 
 **ENT File Extractor**는 엔트리 작품 파일(`.ent`)을 압축 해제하고, 여러 개의 파일을 병합한 후 새로운 `.ent` 파일로 다시 압축할 수 있는 GUI 애플리케이션입니다. Python의 `Tkinter`로 개발되었습니다.
@@ -27,7 +31,6 @@ Python 환경 설정 없이 실행할 수 있는 **Windows 실행 파일**을 �
 1. [`EntryMerge.exe`](https://github.com/205sla/EntryMerge-python/tree/main/dist) 다운로드
 2. `EntryMerge.exe` 실행
 3. GUI에서 `.ent` 파일을 추가하고 병합 진행
-4. [유튜브 영상](https://youtu.be/DBWdrvaxsok) 참고
 
 > 실행 시 보안 경고가 발생하면 아래 방법을 사용하세요.
 
@@ -52,6 +55,8 @@ python app.py
 ```
 
 ## 사용 방법
+
+[유튜브 영상](https://youtu.be/zwtdWe110rs) 참고
 
 1. **저장 경로 지정**: 빈 폴더만 선택 가능
 2. **ENT 파일 추가**: `.ent` 파일을 최대 10개까지 추가 가능
